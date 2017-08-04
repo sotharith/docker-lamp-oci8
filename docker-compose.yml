@@ -1,0 +1,78 @@
+version: "3"
+
+services:
+
+### APACHE Container #########################################
+
+    apache:
+        build:
+            context: ./apache
+        ports:
+            - '80:80'
+            - '3000:3000'
+        volumes:
+            - ./apache/v-hosts/:/etc/apache2/sites-available
+            - ./apache/v-hosts/:/etc/apache2/sites-enabled
+            - ./apache/php.ini:/usr/local/etc/php/php.ini
+            - ./htdocs:/var/www/html/
+        networks:
+            - backend
+
+### MYSQL Container #########################################
+
+    mariadb:
+        image: mariadb:latest
+        volumes:
+            - ./data/mariadb:/var/lib/mysql 
+        ports:
+            - "3306:3306"
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+        networks:
+            - backend
+
+### PostgreSQL Container ####################################
+
+    postgres:
+      image: postgres:latest
+      volumes:
+        - ./data/postgres:/var/lib/postgresql/data
+      ports:
+        - "5432:5432"
+      environment:
+        - POSTGRES_DB=default
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=root
+      networks:
+        - backend
+
+### MongoDB Container #######################################
+
+    mongo:
+      image: mongo:latest
+      ports:
+        - "27017:27017"
+      volumes:
+        - ./data/mongo:/data/db
+      networks:
+        - backend
+
+### PHP MyAdmin Container #########################################
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        depends_on:
+            - mariadb
+        ports:
+            - '8080:80'
+        environment:
+          - PMA_ARBITRARY=1
+          - MYSQL_ROOT_PASSWORD=root
+        networks:
+            - backend
+
+### Networks Setup ############################################
+
+networks:
+    backend:
+        driver: "bridge"
