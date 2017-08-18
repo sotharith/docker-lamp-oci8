@@ -14,14 +14,14 @@ services:
             - ./apache/v-hosts/:/etc/apache2/sites-available
             - ./apache/v-hosts/:/etc/apache2/sites-enabled
             - ./apache/php.ini:/usr/local/etc/php/php.ini
-            - ./htdocs:/var/www/html/
+            - ../Laravels:/var/www/html/
         networks:
             - backend
 
 ### MYSQL Container #########################################
 
-    mariadb:
-        image: mariadb:latest
+    mysql:
+        image: mysql:latest
         volumes:
             - ./data/mariadb:/var/lib/mysql 
         ports:
@@ -62,7 +62,7 @@ services:
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
         depends_on:
-            - mariadb
+            - mysql
         ports:
             - '8080:80'
         environment:

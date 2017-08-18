@@ -102,6 +102,10 @@ RUN wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkh
 ## Enable appache rewrite mode
 RUN a2enmod rewrite
 
+## INSTALL BZip
+RUN apt-get install -y libbz2-dev
+RUN docker-php-ext-install bz2
+
 RUN usermod -u 1000 www-data
 RUN chown -R www-data:www-data /var/www
 
