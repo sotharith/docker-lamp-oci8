@@ -106,6 +106,9 @@ RUN a2enmod rewrite
 RUN apt-get install -y libbz2-dev
 RUN docker-php-ext-install bz2
 
+# INSTALL VIM
+RUN apt-get install -y vim
+
 RUN usermod -u 1000 www-data
 RUN chown -R www-data:www-data /var/www
 
